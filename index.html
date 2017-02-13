@@ -1,0 +1,465 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+
+<!-- You might want to try something fancier: -->
+<!-- html/nunjucks docs: http://mozilla.github.io/nunjucks/ -->
+<!-- jade: http://jade-lang.com/ -->
+<!-- haml: http://haml.info/tutorial.html -->
+<!-- hbs(handlebars): http://handlebarsjs.com/expressions.html -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome to Gomix!</title>
+    <meta name="description" content="A cool thing made with Gomix">
+    <link id="favicon" rel="icon" href="https://gomix.com/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/prism.css">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+  </head>
+  <body>
+    <header>
+      <h1>
+        Dev Reminders
+      </h1>
+    </header>
+
+    <main>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-10">
+          
+          <h3>See all vars</h3>
+          <pre class="line-numbers">
+            <code class="language-php">
+            dpm(get_defined_vars());
+            </code>
+            </pre>
+            
+          <h3>Get Page Type</h3>
+          <pre class="line-numbers">
+            <code class="language-php">
+              arg(0);
+              if (arg(0) == 'taxonomy') {
+              try {
+                $termid = arg(2);
+                $term = taxonomy_term_load($termid);
+                $name_field = $term->name;
+                $description_field = $term->description;
+                $vocab = $term->vocabulary_machine_name;
+            }
+              catch (Exception $e) {
+                watchdog('wcc_status_banner', 'Error when trying to generate banner: ' . print_r($e, TRUE), WATCHDOG_ERROR);
+              }
+            }
+            </code>
+          </pre>
+
+          <h3>Hook Menu</h3>
+          <pre class="line-numbers">
+            <code class="language-php">
+              <h3>Hook Menu</h3>
+         
+              /**
+               * Implements hook menu.
+               */
+              
+              function wcc_status_banner_menu() {
+                $items['admin/wcc-status-banner'] = array(
+                  'title' => 'Status Banners',
+                  'description' => 'List status banners',
+                  'page callback' => 'wcc_status_banner_page',
+                  'access arguments' => array('access content'),
+                  'type' => MENU_NORMAL_ITEM,
+                );
+                return $items;
+              }  
+            </code>
+          </pre>
+          
+          <h3>jQuery</h3>
+          <pre class="line-numbers">
+            <code class="javascript">
+              (function ($) {
+  // Original JavaScript code.
+})(jQuery);
+            </code>
+          </pre>
+    
+          <h3>Hook Form ALter with Template</h3>
+          
+          <pre class="line-numbers">
+            <code class="language-php">
+              function wcc_status_banner_form_alter(&$form, &$form_state, $form_id) {
+            
+              switch ($form_id) {
+                case 'status_banner_node_form':
+                  $form['field_sb_content_ref']['#states'] = array(
+                    'visible' => array(
+                      ':input[name="field_sb_add_all_pages[und]"]' => array('checked' => FALSE),
+                    ),
+                  );
+                  $form['field_sb_collection_ref']['#states'] = array(
+                    'visible' => array(
+                      ':input[name="field_sb_add_all_pages[und]"]' => array('checked' => FALSE),
+                    ),
+                  );
+            
+                  // Hide 'promote to front' checkbox.
+                  if (isset($form['options']['promote'])) {
+                    $form['options']['promote']['#access'] = FALSE;
+                  }
+            
+                  // Hide 'sticky' checkbox.
+                  if (isset($form['options']['sticky'])) {
+                    $form['options']['sticky']['#access'] = FALSE;
+                  }
+                  break;
+              }
+            }
+            </code>
+          </pre>
+
+<h3>Custom Template File</h3>
+
+<pre class="line-numbers">
+<code class="language-php">
+Custom Template File
+
+
+/**
+ * @file Module file.
+ */
+
+/**
+ * Implements hook menu.
+ */
+function exercise_menu() {
+  $items['exercisesAll'] = array(
+    'page callback' => 'exercise_view',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Callback function.
+ */
+function exercise_view() {
+  $items = array();
+  $page = array(
+    'exercise_my_page' => array(
+      '#theme' => 'my_page',
+    ),
+  );
+  $items = array(
+    $page,
+  );
+  return $items;
+}
+
+function exercise_theme() {
+  return array
+  (
+    'my_page' => array
+    (
+      'variables' => array('contents' => array()),
+      'template' => 'exercise',
+    ),
+  );
+}
+
+      </code>
+      </pre>
+
+
+<h3>Dynamic Query</h3>
+<pre class="line-numbers">
+  <code class="language-php">
+  Dynamic Query
+/*
+ * Query DB for 'Add to all pages' banners().
+ */
+$sql = db_select("node", "n");
+$sql->distinct();
+$sql->join('field_data_body', 'b', 'n.nid = b.entity_id');
+$sql->join('field_data_field_sb_add_all_pages', 'add_all', 'n.nid = add_all.entity_id');
+$sql->join('field_data_field_background_color', 'color', 'n.nid = color.entity_id');
+$sql->fields('n', array('nid', 'title'));
+$sql->fields('b', array('body_value'));
+$sql->fields('add_all', array('field_sb_add_all_pages_value'));
+$sql->fields('color', array('field_background_color_jquery_colorpicker'));
+$sql->condition('type', 'status_banner');
+$sql->condition('field_sb_add_all_pages_value', 1, '=');
+$sql->condition('status', 1, '=');
+$sql->orderBy('n.changed', 'DESC');
+$sql->range(0, 1);
+$result = $sql->execute()->fetchAll();
+
+$addAllCount = count($result);
+if ($addAllCount) {
+  foreach ($result as $recordAll) {
+    _wcc_status_banner_render($recordAll->body_value, $recordAll->field_background_color_jquery_colorpicker);
+  }
+}
+</code>
+</pre>
+
+<h3>render block anywhere</h3>
+<pre class="line-numbers">
+<code class="language-php">
+   $block = module_invoke('wcc_status_banner', 'block_view', 'banner_message_block');
+   print render($block['content']);
+  </code>
+</pre>  
+
+<h3>Implement Block</h3>
+<pre class="line-numbers">
+<code class="language-php">
+  /**
+ * Implements hook_block_info().
+ */
+function wcc_status_banner_block_info() {
+  $blocks = array();
+  $blocks['banner_message_block'] = array(
+    'info' => t('Custom Status Banner Block'),
+    'status' => 1,
+    'region' => 'help',
+    'weight' => 1,
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function wcc_status_banner_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'banner_message_block':
+      $block['subject'] = '';
+      $block['content'] = _wcc_status_banner_block_content();
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements message_block().
+ */
+function _wcc_status_banner_block_content() {
+  // Load custom js.
+drupal_add_js(drupal_get_path('module', 'wcc_status_banner') . '/js/script.js', 'file');
+}
+
+  </code>
+</pre>  
+
+<h3>Convert results to object</h3>
+<pre class="line-numbers">
+<code class="language-php">
+  $results = $query->execute();
+$data = $results->fetchObject();
+  </code>
+</pre>  
+
+
+<h3>Add item to array in each loop return render array</h3>
+<pre>
+  <code>
+  $items[] = t('The %type content type has %num %status nodes.', array('%type' => $typename, '%num' =>$data->node_count, '%status' => $status));
+$content['node-list'] = array(
+  '#items' => $items,
+  '#theme' => 'item_list',
+);
+return $content;
+  </code>
+</pre>  
+
+<h3>Display 404:</h3>
+<pre class="line-numbers"><code class="language-php">
+  return drupal_not_found();
+  </code>
+</pre>  
+
+<h3>Generate Content</h3>
+<pre class="line-numbers"><code class="language-php">
+    drush en devel_generate (enable module)
+    drush genc 5 --types=latest_news (generate for content type)
+  </code>
+</pre>  
+
+<h3>Login as any user</h3>
+<pre class="line-numbers"><code class="language-php">
+  
+drush user-login 60253
+  </code>
+</pre>  
+
+<h3>Updating</h3>
+<pre class="line-numbers"><code class="language-php">
+    update core: drush pm-update drupal
+    update all modules (except core): drush pm-update --no-core
+  </code>
+</pre>  
+
+<h3>Override View template in feature module</h3>
+<pre class="line-numbers"><code class="language-php">
+    /**
+ * Implements hook_views_api_alter().
+ */
+function wcc_event_calendar_feature_views_api_alter(&$apis) {
+ if (!empty($apis['wcc_event_calendar_feature']) && $apis['wcc_event_calendar_feature']['api'] == '3.0') {
+ $apis['wcc_event_calendar_feature']['template path'] = drupal_get_path('module', 'wcc_event_calendar_feature') . '/templates';
+ }
+}
+  </code>
+</pre>  
+
+
+<h3>Add a variable (theme)</h3>
+<pre class="line-numbers"><code class="language-php">
+    function YOURTHEME_preprocess_page(&$variables) {if($variables['logged_in']) {
+//display all vars
+//kpr($variables); 
+  $variables['footer_message'] = t('Welcome @username',
+    array('@username' => $variables['user']->name));
+}
+else {
+  $variables['footer_message'] = t('Not logged in');
+}
+}
+  </code>
+</pre>  
+          
+          
+<h3>Print Views Fields without notice error</h3>
+
+<pre class="line-numbers"><code class="language-php">
+<?php if(!empty($fields['field_equipment']->content)) {?>
+            <tr>
+              <th><?php print strip_tags($fields['field_equipment']->label); ?></th>
+              <td><?php print strip_tags($fields['field_equipment']->content); ?></td>
+              </tr>
+              <?php }; ?>
+              
+              
+              //or
+              
+              print $view->render_field("body", $view->row_index);
+</code>
+</pre>            
+
+
+
+<h3>Print Views Fields</h3>
+
+<pre class="line-numbers"><code class="language-php">
+//views-view-fields--calendar.tpl.php
+
+$event_title = $view->render_field("title", $view->row_index);
+$event_body = $view->render_field("body", $view->row_index);
+$event_location = $row->field_field_location[0][raw][value];
+
+dsm($row);
+</code>
+</pre>  
+
+
+<h3>Get View in Code</h3>
+
+https://drupalize.me/videos/creating-default-view-exporting-existing-view?p=1138
+
+Register View:
+https://api.drupal.org/api/views/views.api.php/function/hook_views_api/7.x-3.x
+
+Export View
+https://api.drupal.org/api/views/views.api.php/function/hook_views_default_views/7.x-3.x
+
+Ensure Views Reads In Code. If not revert.
+          
+          
+          
+<h3>Render views field (gives notice error)</h3>
+        <pre class="line-numbers"><code class="language-php">
+        <?php if(!empty($row->field_field_related_exercises)) {?>
+          <section id="related-exercises">
+            <hr/>
+            <h3>Related Exercises</h3>
+            <div>
+              <!-- Field Equipment -->
+
+            <?php
+              $result_names = '';
+              foreach ($row->field_field_related_exercises as $tag) { ?>
+                <?php $result_names .=$tag[rendered]['#title']. ', '; ?>
+              <?php }
+              print rtrim($result_names,', ');
+              ?>
+
+            </div>
+          </section>
+          <?php } ?>
+           </code>
+           </pre>
+          
+          <h3>Links</h3>
+          
+          Print fields in node template: https://www.computerminds.co.uk/articles/rendering-drupal-7-fields-right-way
+          print views fields: https://www.drupal.org/node/1108088
+
+
+</div>
+
+<!--<h3></h3>
+<pre>
+  <code>
+  </code>
+</pre>  -->
+        
+
+
+  <div class="col-xs-2">
+    <nav class="sidebar affix">
+      <ul class="nav">
+        <li>
+          <a href="#drupal">Drupal</a>
+          <ul class="nav">
+            <li>
+              <a href="">Module Dev</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      </nav>
+        
+      </div>
+    </div>
+
+
+      
+    </main>
+
+    <footer>
+      <a href="https://gomix.com">
+        Remix this in Gomix
+      </a>
+    </footer>
+
+    <!-- Your web-app is https, so your scripts need to be too -->
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+            crossorigin="anonymous"></script>
+    <script src="/client.js"></script>
+    <script src="/prism.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+
+  </body>
+</html>
