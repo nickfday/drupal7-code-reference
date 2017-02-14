@@ -310,12 +310,14 @@ drush user-login 60253
   </code>
 </pre>  
           
-<h3>Add CSS to module</h3>
+<h3>Add CSS/JS to module</h3>
 <pre class="line-numbers"><code class="language-php">
     
-    function wcc_city_for_all_main_page_callback() {
-      drupal_add_css(drupal_get_path('module', 'wcc_city_for_all') . '/css/city-for-all-main-page.css');
-      drupal_add_css('//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css', array('type' => 'external'));
+    function MYMODULE_callback() {
+      drupal_add_css(drupal_get_path('module', 'MYMODULE') . '/css/city-for-all-main-page.css');
+      drupal_add_css('EXTERNAL_URL', array('type' => 'external'));
+      drupal_add_js('EXTERNAL_URL', array('type' => 'external'));
+      drupal_add_js(drupal_get_path('module', 'MYMODULE') . '/js/script.js', 'file');
     }
     
   </code>
