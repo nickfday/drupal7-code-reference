@@ -309,6 +309,17 @@ drush user-login 60253
     update all modules (except core): drush pm-update --no-core
   </code>
 </pre>  
+          
+<h3>Add CSS to module</h3>
+<pre class="line-numbers"><code class="language-php">
+    
+    function wcc_city_for_all_main_page_callback() {
+      drupal_add_css(drupal_get_path('module', 'wcc_city_for_all') . '/css/city-for-all-main-page.css');
+      drupal_add_css('//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css', array('type' => 'external'));
+    }
+    
+  </code>
+</pre>            
 
 <h3>Override View template in feature module</h3>
 <pre class="line-numbers"><code class="language-php">
