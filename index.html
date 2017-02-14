@@ -31,14 +31,31 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-10">
-          
+				<h3>Hook Menu</h3>
+          <pre class="line-numbers">
+            <code class="language-php">
+              /**
+               * Implements hook menu.
+               */
+              function MYMODULE_banner_menu() {
+                $items['YOUR_PATH'] = array(
+                  'title' => 'Custom Titile',
+                  'description' => 'Custom description',
+                  'page callback' => 'MY_MODULE_banner_page',
+                  'access arguments' => array('access content'),
+                  'type' => MENU_NORMAL_ITEM,
+                );
+                return $items;
+              }
+            </code>
+          </pre>
+
           <h3>See all vars</h3>
           <pre class="line-numbers">
             <code class="language-php">
             dpm(get_defined_vars());
             </code>
             </pre>
-            
           <h3>Get Page Type</h3>
           <pre class="line-numbers">
             <code class="language-php">
@@ -57,30 +74,7 @@
             }
             </code>
           </pre>
-
-          <h3>Hook Menu</h3>
-          <pre class="line-numbers">
-            <code class="language-php">
-              <h3>Hook Menu</h3>
-         
-              /**
-               * Implements hook menu.
-               */
-              
-              function wcc_status_banner_menu() {
-                $items['admin/wcc-status-banner'] = array(
-                  'title' => 'Status Banners',
-                  'description' => 'List status banners',
-                  'page callback' => 'wcc_status_banner_page',
-                  'access arguments' => array('access content'),
-                  'type' => MENU_NORMAL_ITEM,
-                );
-                return $items;
-              }  
-            </code>
-          </pre>
-          
-          <h3>jQuery</h3>
+        <h3>jQuery</h3>
           <pre class="line-numbers">
             <code class="javascript">
               (function ($) {
@@ -88,13 +82,13 @@
 })(jQuery);
             </code>
           </pre>
-    
+
           <h3>Hook Form ALter with Template</h3>
-          
+
           <pre class="line-numbers">
             <code class="language-php">
               function wcc_status_banner_form_alter(&$form, &$form_state, $form_id) {
-            
+
               switch ($form_id) {
                 case 'status_banner_node_form':
                   $form['field_sb_content_ref']['#states'] = array(
@@ -107,12 +101,12 @@
                       ':input[name="field_sb_add_all_pages[und]"]' => array('checked' => FALSE),
                     ),
                   );
-            
+
                   // Hide 'promote to front' checkbox.
                   if (isset($form['options']['promote'])) {
                     $form['options']['promote']['#access'] = FALSE;
                   }
-            
+
                   // Hide 'sticky' checkbox.
                   if (isset($form['options']['sticky'])) {
                     $form['options']['sticky']['#access'] = FALSE;
@@ -215,7 +209,7 @@ if ($addAllCount) {
    $block = module_invoke('wcc_status_banner', 'block_view', 'banner_message_block');
    print render($block['content']);
   </code>
-</pre>  
+</pre>
 
 <h3>Implement Block</h3>
 <pre class="line-numbers">
@@ -260,7 +254,7 @@ drupal_add_js(drupal_get_path('module', 'wcc_status_banner') . '/js/script.js', 
 }
 
   </code>
-</pre>  
+</pre>
 
 <h3>Convert results to object</h3>
 <pre class="line-numbers">
@@ -268,7 +262,7 @@ drupal_add_js(drupal_get_path('module', 'wcc_status_banner') . '/js/script.js', 
   $results = $query->execute();
 $data = $results->fetchObject();
   </code>
-</pre>  
+</pre>
 
 
 <h3>Add item to array in each loop return render array</h3>
@@ -281,47 +275,47 @@ $content['node-list'] = array(
 );
 return $content;
   </code>
-</pre>  
+</pre>
 
 <h3>Display 404:</h3>
 <pre class="line-numbers"><code class="language-php">
   return drupal_not_found();
   </code>
-</pre>  
+</pre>
 
 <h3>Generate Content</h3>
 <pre class="line-numbers"><code class="language-php">
     drush en devel_generate (enable module)
     drush genc 5 --types=latest_news (generate for content type)
   </code>
-</pre>  
+</pre>
 
 <h3>Login as any user</h3>
 <pre class="line-numbers"><code class="language-php">
-  
+
 drush user-login 60253
   </code>
-</pre>  
+</pre>
 
 <h3>Updating</h3>
 <pre class="line-numbers"><code class="language-php">
     update core: drush pm-update drupal
     update all modules (except core): drush pm-update --no-core
   </code>
-</pre>  
-          
+</pre>
+
 <h3>Add CSS/JS to module</h3>
 <pre class="line-numbers"><code class="language-php">
-    
+
     function MYMODULE_callback() {
       drupal_add_css(drupal_get_path('module', 'MYMODULE') . '/css/city-for-all-main-page.css');
       drupal_add_css('EXTERNAL_URL', array('type' => 'external'));
       drupal_add_js('EXTERNAL_URL', array('type' => 'external'));
       drupal_add_js(drupal_get_path('module', 'MYMODULE') . '/js/script.js', 'file');
     }
-    
+
   </code>
-</pre>            
+</pre>
 
 <h3>Override View template in feature module</h3>
 <pre class="line-numbers"><code class="language-php">
@@ -334,14 +328,14 @@ function wcc_event_calendar_feature_views_api_alter(&$apis) {
  }
 }
   </code>
-</pre>  
+</pre>
 
 
 <h3>Add a variable (theme)</h3>
 <pre class="line-numbers"><code class="language-php">
     function YOURTHEME_preprocess_page(&$variables) {if($variables['logged_in']) {
 //display all vars
-//kpr($variables); 
+//kpr($variables);
   $variables['footer_message'] = t('Welcome @username',
     array('@username' => $variables['user']->name));
 }
@@ -350,9 +344,9 @@ else {
 }
 }
   </code>
-</pre>  
-          
-          
+</pre>
+
+
 <h3>Print Views Fields without notice error</h3>
 
 <pre class="line-numbers"><code class="language-php">
@@ -362,13 +356,13 @@ else {
               <td><?php print strip_tags($fields['field_equipment']->content); ?></td>
               </tr>
               <?php }; ?>
-              
-              
+
+
               //or
-              
+
               print $view->render_field("body", $view->row_index);
 </code>
-</pre>            
+</pre>
 
 
 
@@ -383,7 +377,7 @@ $event_location = $row->field_field_location[0][raw][value];
 
 dsm($row);
 </code>
-</pre>  
+</pre>
 
 
 <h3>Get View in Code</h3>
@@ -397,9 +391,9 @@ Export View
 https://api.drupal.org/api/views/views.api.php/function/hook_views_default_views/7.x-3.x
 
 Ensure Views Reads In Code. If not revert.
-          
-          
-          
+
+
+
 <h3>Render views field (gives notice error)</h3>
         <pre class="line-numbers"><code class="language-php">
         <?php if(!empty($row->field_field_related_exercises)) {?>
@@ -422,9 +416,9 @@ Ensure Views Reads In Code. If not revert.
           <?php } ?>
            </code>
            </pre>
-          
+
           <h3>Links</h3>
-          
+
           Print fields in node template: https://www.computerminds.co.uk/articles/rendering-drupal-7-fields-right-way
           print views fields: https://www.drupal.org/node/1108088
 
@@ -436,7 +430,7 @@ Ensure Views Reads In Code. If not revert.
   <code>
   </code>
 </pre>  -->
-        
+
 
 
   <div class="col-xs-2">
@@ -452,12 +446,12 @@ Ensure Views Reads In Code. If not revert.
         </li>
       </ul>
       </nav>
-        
+
       </div>
     </div>
 
 
-      
+
     </main>
 
     <footer>
