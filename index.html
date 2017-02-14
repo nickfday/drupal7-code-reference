@@ -32,6 +32,8 @@
       <div class="row">
         <div class="col-xs-10">
 				<h3>Hook Menu</h3>
+				<p>Add a custom page to Drupal</p>
+				<a href="https://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_menu/7.x">Docs</a>
           <pre class="line-numbers">
             <code class="language-php">
               /**
@@ -50,12 +52,18 @@
             </code>
           </pre>
 
-          <h3>See all vars</h3>
+          <h3>Debugging</h3>
+          <p>Output variables onto page</p>
+          <a href="http://www.drupal.org/node/308732">Docs</a>https://
           <pre class="line-numbers">
             <code class="language-php">
+            print_r(get_defined_vars);
+            // with devel enabled
             dpm(get_defined_vars());
+            krumo(get_defined_vars());
             </code>
             </pre>
+
           <h3>Get Page Type</h3>
           <pre class="line-numbers">
             <code class="language-php">
